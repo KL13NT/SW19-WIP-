@@ -1,0 +1,113 @@
+@font-face 
+    font-family 'topMarginFont' 
+    font-weight bold 
+    src url('../assets/fonts/KGALittleSwag.ttf')
+@font-face 
+    font-family 'mainDisplayFont1' 
+    font-weight normal 
+    src url('../assets/fonts/KGDefyingGravity.ttf')
+@font-face 
+    font-family 'mainDisplayFont2'
+    font-weight normal 
+    src url('../assets/fonts/SivarPro.otf')
+*
+    margin 0
+    padding 0 
+    box-sizing border-box
+#topMarginRoot
+    font-family 'topMarginFont'
+    transition margin 0.5s
+    text-transform uppercase
+    text-align center
+    font-size 6rem
+    position relative
+    top -1.5rem
+html 
+    height 100% 
+    width 100%
+    overflow hidden
+body 
+    height 100%
+    width 100%
+    text-align: center
+    transition margin-top 1s
+#container
+    display block
+    background #ffc704 url('../assets/40033.svg')
+    background-origin border-box
+    background-size 20%
+    height 100%
+    width 100%
+    text-align center
+    transition background 2.5s
+    transition-timing-function cubic-bezier(.17,.67,.77,.8)
+#mainDisplayRoot 
+    height 100%
+    width 100%
+    position relative
+    text-align center
+#paper1,#paper2
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    position: absolute;
+    background: #fff;
+    display: block;
+    height: 100%;
+    top: 0;
+    // left: 30%
+    z-index: -2;
+    transition-timing-function: cubic-bezier(.17,.67,.77,.8)
+    padding: 4rem 2rem 4rem 2rem;
+    width 35%
+    height 80%
+    text-align: left;
+    z-index: 1;
+    font-family 'mainDisplayFont1'
+    font-size 3.5rem
+    transform: rotate(2deg);
+    transition transform 0.5s, margin-left 0.5s
+#paper1
+    transform: rotate(0deg);
+    z-index: 2;
+
+.slid
+    transform rotate(90deg) !important
+#paper1Text
+    position absolute
+    top 0
+    left 0
+    transition margin 0.5s, transform 0.5s, visibility 0.5s
+    z-index 4
+    text-align left
+    font-family 'mainDisplayFont1'
+    font-size 3.5rem
+    max-width 27rem
+    padding 2rem
+    word-wrap break-word
+    transform-origin left 
+    color #272727
+.slideRight
+    margin-left 200%
+.slideLeft
+    margin-right 200%
+.yellowTopBorder
+    border-top solid 5px #ffc704
+    font-family 'mainDisplayFont2' !important
+    max-width 90% !important
+    font-size 14rem
+    padding-top 5rem !important
+.yellowTopBorder::after
+    width: 7rem;
+    border-bottom: solid 5px #ffc704;
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 18rem;
+.yellowTopBorder::before
+    width: 14rem;
+    border-bottom: solid 5px #ffc704;
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 19rem;

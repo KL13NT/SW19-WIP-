@@ -1,28 +1,44 @@
 const webpack = require('webpack')
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const optimizeCssAssets = require('optimize-css-assets-webpack-plugin')
+const OptimizeCssAssets = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const imageminPlugin = require('imagemin-webpack-plugin')
+const ImageminPlugin = require('imagemin-webpack-plugin').default
 const devMode = process.env.NODE_ENV !== 'production' //true
 
 module.exports = {
-    mode: 'development',
-    entry: 'index.js',
-    output:{
+    mode: 'production',
+    entry: {
+        main: './index.js'
+    },
+    output: { //for building
         path: path.resolve(__dirname, './output'),
-        filename: '[name].js'
+        filename: '[name].js',
     },
     devServer: {
         contentBase: './',
         allowedHosts: ['127.0.0.1', 'localhost', '0.0.0.0'],
         publicPath: '/',
-        historyApiFallback: true,
-        port: 8082,
+        historyApiFallback: true, 
+        port: 8080,
         inline: true,
-        public: '0.0.0.0',
-        hot: true
+        public: '127.0.0.1'
     },
+    // entry: './index.js',
+    // output:{
+    //     path: path.resolve(__dirname, './output'),
+    //     filename: 'bundle.js'
+    // },
+    // devServer: {
+    //     contentBase: path.join(__dirname, 'output'),
+    //     allowedHosts: ['127.0.0.1', 'localhost'],
+    //     publicPath: '/output/',
+    //     historyApiFallback: true,
+    //     port: 8082,
+    //     inline: true,
+    //     host: '0.0.0.0',
+    //     hot: true
+    // },
     module: {
         rules: [
             {
@@ -31,12 +47,12 @@ module.exports = {
             },
             {
                 test: /\.styl$/i,
-                exclude: path.resolve(__dirname, 'GLOBAL_CSS'),
+                include: path.resolve(__dirname, 'GLOBAL_CSS'),
                 use: [
-                    devMode? 'style-loader' :MiniCssExtractPlugin.loader,
+                    devMode? 'style-loader' : MiniCssExtractPlugin.loader,
                     {
                         loader: 'css-loader',
-                        modules: false
+                        options:{modules: false}
                     },
                     'postcss-loader',
                     'stylus-loader'
@@ -44,13 +60,16 @@ module.exports = {
             },
             {
                 test: /\.styl$/i,
-                include: path.resolve(__dirname, 'GLOBAL_CSS'),
+                exclude: path.resolve(__dirname, 'GLOBAL_CSS'),
                 use: [
                     devMode? 'style-loader' :MiniCssExtractPlugin.loader,
                     {
                         loader: 'css-loader',
-                        modules: true,
-                        localIdentName: '[local]___[hash:base64:5]'
+                        options:{
+                            modules: true,
+                            localIdentName: '[local]___[hash:base64:5]'
+                        }
+                        
                     },
                     'postcss-loader',
                     'stylus-loader'
@@ -77,15 +96,17 @@ module.exports = {
           new OptimizeCssAssets(),
     ],
     optimization: {
-        minimizer: [
-            new UglifyJsPlugin(),
-        ],
+        minimizer: [new UglifyJsPlugin({
+            test: /\.js$/i
+        })],
         splitChunks: {
             cacheGroups: {
-                name: 'styles',
-                test: /\.css$/i,
-                chunks: 'all',
-                enforce: true
+                styles:{
+                    name: 'styles',
+                    test: /\.css$/i,
+                    chunks: 'all',
+                    enforce: true
+                }
             }
         }
     }
