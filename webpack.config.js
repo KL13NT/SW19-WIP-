@@ -4,10 +4,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCssAssets = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const ImageminPlugin = require('imagemin-webpack-plugin').default
-const devMode = process.env.NODE_ENV !== 'production' //true
+const devMode = process.env.NODE_ENV !== 'production'
 
 module.exports = {
-    mode: 'production',
+    mode: 'development',
     entry: {
         main: './index.js'
     },
@@ -24,21 +24,7 @@ module.exports = {
         inline: true,
         public: '127.0.0.1'
     },
-    // entry: './index.js',
-    // output:{
-    //     path: path.resolve(__dirname, './output'),
-    //     filename: 'bundle.js'
-    // },
-    // devServer: {
-    //     contentBase: path.join(__dirname, 'output'),
-    //     allowedHosts: ['127.0.0.1', 'localhost'],
-    //     publicPath: '/output/',
-    //     historyApiFallback: true,
-    //     port: 8082,
-    //     inline: true,
-    //     host: '0.0.0.0',
-    //     hot: true
-    // },
+    devtool: 'source-map',
     module: {
         rules: [
             {
@@ -76,24 +62,29 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(png|svg|jpg|gif|woff|woff2|eot|ttf|otf)$/i,
+                test: /\.(png|svg|jpg|gif)$/i,
+                use: ['file-loader',
+                {
+                    loader: 'image-webpack-loader',
+                    options: {
+                      bypassOnDebug: true, // webpack@1.x
+                      disable: false, // webpack@2.x and newer
+                    },
+                  }]
+            },
+            {
+                test: /\.(woff|woff2|eot|ttf|otf)$/i,
                 use: 'file-loader'
             }
+
         ]
     },
+    // externals : {
+    //     react: 'react',
+    //     reactdom: 'react-dom'
+    // },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new ImageminPlugin({
-            disable: devMode, // Disable during development
-            pngquant: {
-              quality: '95-100'
-            }
-          }),
-          new MiniCssExtractPlugin({
-            filename: devMode ? '[name].css':'[name].[hash].css',
-            chunkFilename: devMode ? '[id].[hash].css' : '[id].css'
-          }),
-          new OptimizeCssAssets(),
+        new webpack.HotModuleReplacementPlugin()
     ],
     optimization: {
         minimizer: [new UglifyJsPlugin({
