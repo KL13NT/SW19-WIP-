@@ -87,11 +87,11 @@ class MainDisplay extends Component{
             }
             else{
                 clearInterval(flickeringInterval)
-                this.removeText()
+                this.removeText(0)
             }
         }, 200)//FLICKERING ANIMATION SPEED
     }
-    removeText = ()=>{
+    removeText = (x)=>{
         let textRemovalInterval = setInterval(()=>{
             let defaultMsg = [...this.state.messageWritten]
             let dump = defaultMsg.splice(defaultMsg.length -1, 1) //dumped value, not used
@@ -99,8 +99,8 @@ class MainDisplay extends Component{
             this.setState({messageWritten: [...defaultMsg]})
             
             if(this.state.messageWritten.length == 0){ 
-                this.straightenPapers()
                 clearInterval(textRemovalInterval)
+                if(x == 0) this.straightenPapers()
             }
         }, 25) //TEXT REMOVAL ANIMATION SPEED
     }
@@ -135,11 +135,19 @@ class MainDisplay extends Component{
         paper2.classList.add('ndDisplayAll')
         paper1Text.classList.add('display2Font')
         
-        
         this.setState({
             message: 'A year just passed and our friendship is only getting stronger_'
         })
-        setTimeout(()=>{paper1Text.classList.add('yellowTopBorder');this.writeText(1); document.getElementById('canvas').style.visibility = 'visible';}, 400)
+        setTimeout(()=>{
+            paper1Text.classList.add('yellowTopBorder');
+            this.writeText(1); 
+            document.getElementById('canvas').style.visibility = 'visible';
+        }, 400)
+        
+        setTimeout(()=>{this.removeText(1)}, 3000)
+        setTimeout(()=>{this.setState({
+            message: 'Screw Shaarooooooty! <3'
+        });this.writeText(1)}, 5200)
     }
     
     render(){
