@@ -39,6 +39,7 @@ class MainDisplay extends Component{
     moveBackground = (x)=>{
         if(x == 10){
         window.bgInterval = setInterval(()=>{ 
+            if(x > 100) x = 20
             x++
             document.getElementById('container').style.backgroundPositionX = `${x}%`
         }, 250)} //MOVING BACKGROUND ANIMATION SPEED
@@ -143,11 +144,6 @@ class MainDisplay extends Component{
             this.writeText(1); 
             document.getElementById('canvas').style.visibility = 'visible';
         }, 400)
-        
-        setTimeout(()=>{this.removeText(1)}, 3000)
-        setTimeout(()=>{this.setState({
-            message: 'Screw Shaarooooooty! <3'
-        });this.writeText(1)}, 5200)
     }
     
     render(){
