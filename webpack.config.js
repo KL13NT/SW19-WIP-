@@ -12,7 +12,7 @@ module.exports = {
         main: './index.js'
     },
     output: { //for building
-        path: path.resolve(__dirname, './output'),
+        path: path.resolve(__dirname, './docs'),
         filename: '[name].js',
     },
     devServer: {

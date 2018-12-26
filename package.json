@@ -4,9 +4,10 @@
   "description": "Stay with me in 2019, a small animation using HTML,CSS &amp; JS.",
   "main": "index.js",
   "scripts": {
-    "start:dev": "webpack-dev-server",
-    "build:dev": "webpack",
-    "build:prod": "webpack --env.production",
+    "start:dev": "webpack-dev-server --mode development",
+    "start:prod": "webpack-dev-server --mode production",
+    "build:dev": "webpack --mode development",
+    "build:prod": "webpack --mode production",
     "test": "jest"
   },
   "repository": {

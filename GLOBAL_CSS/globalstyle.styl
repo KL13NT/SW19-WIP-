@@ -18,9 +18,12 @@
     font-family 'topMarginFont'
     transition margin 0.5s
     text-transform uppercase
-    text-align center
+    left auto 
+    right auto
+    display block
+    width 100%
     font-size 6rem
-    position relative
+    position absolute 
     top -1.5rem
 html 
     height 100% 
@@ -41,19 +44,22 @@ body
     text-align center
     transition background 2.5s
     transition-timing-function cubic-bezier(.17,.67,.77,.8)
+    position absolute 
+
 #mainDisplayRoot 
     height 100%
     width 100%
     position relative
     text-align center
-#paper1,#paper2
+    top 15%
+.npaper1,.npaper2
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
     position: absolute;
     background: #fff;
     display: block;
     height: 100%;
     top: 0;
-    // left: 30%
+    left: 30%
     z-index: -2;
     transition-timing-function: cubic-bezier(.17,.67,.77,.8)
     padding: 4rem 2rem 4rem 2rem;
@@ -64,13 +70,30 @@ body
     font-family 'mainDisplayFont1'
     font-size 3.5rem
     transform: rotate(2deg);
-    transition transform 0.5s, margin-left 0.5s
-#paper1
+    transition transform 0.5s, margin-left 0.5s, visibility 0.5s
+.npaper1
     transform: rotate(0deg);
     z-index: 2;
+.straightened
+    transform rotate(0deg)
+.slidRight
+    margin-left 100%
+.ndDisplayAll
+    margin-left: 0 
+    width auto  
+    // transform rotate(0deg)
+.ndDisplayYell
+    height: 50% 
+    left: 3% 
+    right: 3% 
+    top: 10% 
+    background-color #ffc704 
+.ndDisplay
+    height 60% 
+    left 5% 
+    right 5% 
+    top 6% 
 
-.slid
-    transform rotate(90deg) !important
 #paper1Text
     position absolute
     top 0
@@ -85,14 +108,11 @@ body
     word-wrap break-word
     transform-origin left 
     color #272727
-.slideRight
-    margin-left 200%
-.slideLeft
-    margin-right 200%
+.display2Font
+    font-family 'mainDisplayFont2' !important
 .yellowTopBorder
     border-top solid 5px #ffc704
-    font-family 'mainDisplayFont2' !important
-    max-width 90% !important
+    max-width 80% !important
     font-size 14rem
     padding-top 5rem !important
 .yellowTopBorder::after
