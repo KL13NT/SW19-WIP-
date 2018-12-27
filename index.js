@@ -33,7 +33,7 @@ class MainDisplay extends Component{
         window.addEventListener('resize', ()=>{
             this.paper1Text.style.left = document.getElementById('paper1').offsetLeft 
         })
-        this.__MAIN_RENDER_ENGINE__()
+        setTimeout(()=>{this.__MAIN_RENDER_ENGINE__()}, 4000)
     }
     moveBackground = (x, y)=>{
         if(window.bgInterval) clearInterval(window.bgInterval)
