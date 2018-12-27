@@ -29,48 +29,42 @@ class MainDisplay extends Component{
         this.paper1Side = document.getElementById('paper1').offsetLeft 
 
         this.paper1Text.style.left = `${this.paper1Side}px` //set text to be on top of paper 
-        this.paper1Text.style.top = `${this.paper1.offsetTop + 100}px` //set text to be on top of paper
         
-        this.moveBackground(10)
-        this.writeText(0, 35)
+        window.addEventListener('resize', ()=>{
+            this.paper1Text.style.left = document.getElementById('paper1').offsetLeft 
+        })
+        this.__MAIN_RENDER_ENGINE__()
     }
-    moveBackground = (x)=>{
-        if(x == 10){
-        window.bgInterval = setInterval(()=>{ 
-            if(x > 100) x = 20
-            x++
-            document.getElementById('container').style.backgroundPositionX = `${x}%`
-        }, 250)} //MOVING BACKGROUND ANIMATION SPEED
-        else{
-            x = 0
+    moveBackground = (x, y)=>{
+        if(window.bgInterval) clearInterval(window.bgInterval)
+        if(x == 0){
+            window.bgInterval = setInterval(()=>{ 
+                this.container.style.backgroundPositionX = `${x}%`
+                x++
+                if(x==200) x = 0
+            }, y)} //MOVING BACKGROUND ANIMATION SPEED
+        else if(x == 300){
             clearInterval(window.bgInterval)
-            document.getElementById('container').style.backgroundPositionX = `${300}%`
-            this.moveBackground(10)
-        } 
+            this.container.style.backgroundPositionX = `${x}%`
+            this.moveBackground(0, 250)
+        }
     }
-    writeText = (x,y)=>{
-        let i = 0 
-        let viewUpdate = []
+    writeText = (y)=>{
+        let i = 0
         let writingInterval = setInterval(()=>{ //TEXT WRITING ANIMATION
-            let stateInsider = [...this.state.message]
-            viewUpdate.push(stateInsider[i])
             this.setState({
-                messageWritten: viewUpdate.join('')
+                messageWritten: this.state.messageWritten + this.state.message[i]
             })
             i++
             if(i == this.state.message.length){
                 clearInterval(writingInterval)
-                if(x == 0) this.flicker()
             }
-        }, y) //WRITING ANIMATION SPEED
+        }, (y/this.state.message.length)) //WRITING ANIMATION SPEED
     }
-    flicker = ()=>{
+    flicker = (x, y)=>{
         let scoreAppearance = true
-        let defaultMsg = this.state.messageWritten
-        let intervalCount = 5
-
         let flickeringInterval = setInterval(()=>{  //FLICKERING ANIMATION 
-            if(intervalCount > 0){
+            if(x > 0){
                 if(scoreAppearance){
                     this.setState({
                         messageWritten: `${this.state.messageWritten}_`
@@ -78,32 +72,29 @@ class MainDisplay extends Component{
                 }
                 else{
                     this.setState({
-                        messageWritten: `${defaultMsg}`
+                        messageWritten: this.state.messageWritten.replace('_', '')
                     })
                 }
-                intervalCount--;
+                x--
                 scoreAppearance = !scoreAppearance
             }
             else{
                 clearInterval(flickeringInterval)
-                this.removeText(0)
             }
-        }, 200)//FLICKERING ANIMATION SPEED
+        }, y/x)//FLICKERING ANIMATION SPEED
     }
-    removeText = (x,y)=>{
-        let defaultMsg = [...this.state.messageWritten]
+    removeText = (y)=>{
+        i = this.state.messageWritten.length-1
         let textRemovalInterval = setInterval(()=>{
-            this.setState({messageWritten: [...defaultMsg]})
-            let dump = defaultMsg.splice(defaultMsg.length -1, 1) //dumped value, not used
+            this.setState({messageWritten: this.state.messageWritten.replace(this.state.messageWritten[i], '')})
+            i--
             if(this.state.messageWritten.length == 0){ 
                 clearInterval(textRemovalInterval)
-                if(x == 0) this.straightenPapers()
             }
-        }, y) //TEXT REMOVAL ANIMATION SPEED
+        }, y/this.state.messageWritten.length) //TEXT REMOVAL ANIMATION SPEED
     }
     straightenPapers = ()=>{
         this.paper2.classList.add('straightened')
-        setTimeout(this.slideToRight, 500)
     }
     slideToRight = ()=>{
         this.paper2.classList.add('slidRight')
@@ -112,17 +103,13 @@ class MainDisplay extends Component{
         setTimeout(()=>{
             this.paper1.classList.add('slidRight')
             topMarginRoot.classList.add('slidRight')
-            this.moveBackground(20)
-        }, 50) //TIME FOR MOVEMENT START
-        setTimeout(this.transformPapers, 800)
+        }, 50) //TIME FOR MOVEMENT START OF SECOND PAPER
     }
     transformPapers = ()=>{
         this.paper2.classList.add('ndDisplayYell')
         this.paper1.classList.add('ndDisplay')
         this.topMarginRoot.style.color = '#ffffff'
         this.paper1Text.style.left = '10%'
-        
-        setTimeout(this.getDisplayBack, 2000)
     }
     getDisplayBack = ()=>{
         this.paper1Text.style.marginLeft = this.topMarginRoot.style.marginLeft = 0 
@@ -132,53 +119,79 @@ class MainDisplay extends Component{
         this.paper2.classList.add('ndDisplayAll')
         this.paper1Text.classList.add('display2Font')
         
-        this.setState({
-            message: 'A year just passed and our friendship is only getting stronger_'
-        })
-        setTimeout(()=>{
-            this.paper1Text.classList.add('yellowTopBorder');
-            this.writeText(1, 35); 
-            document.getElementById('canvas').style.visibility = 'visible';
-        }, 400)
-        setTimeout(()=>{
-            
-            this.setState({
-                message: ''
-            })
-            this.removeText(1, 1)
-        }, 5000)
-        setTimeout(()=>{
-            this.scaleUp()
-        }, 7000)
-        setTimeout(()=>{this.fadeIn()}, 9000)
+        // this.setState({
+        //     message: 'A year just passed and our friendship is only getting stronger_'
+        // })
+        
+    }
+    addYellowBorders = ()=>{
+        this.paper1Text.classList.add('yellowTopBorder')
+        document.getElementById('canvas').style.visibility = 'visible'
     }
     scaleUp = ()=>{
+        this.paper1Text.classList.remove('yellowTopBorder')
         this.paper2.style.setProperty('visibility', 'hidden')
         this.paper1.style.setProperty('transform', 'scale(2)')
-        this.paper1Text.style.setProperty('transformOrigin', 'center')
+        this.paper1Text.style.setProperty('transform-origin', 'center')
         canvas.style.setProperty('display', 'none')
-        this.paper1Text.style.setProperty('transform', 'scale(20)')
-        setTimeout(()=>{this.paper1Text.style.setProperty('visibility', 'hidden')}, 300)
-        this.paper1Text.style.setProperty('marginLeft', 'auto')
+        this.paper1Text.style.setProperty('visibility', 'hidden')
+        this.paper1Text.style.setProperty('margin-left', 'auto')
         this.paper1Text.style.setProperty('left', '0')
-        this.paper1Text.style.setProperty('marginLeft', 'auto')
-        this.paper1Text.style.setProperty('maxWidth', 'auto')
-        this.setState({message: '____'})
+        this.paper1Text.style.setProperty('margin-left', 'auto')
+        this.paper1Text.style.setProperty('max-width', 'auto')
     }
     fadeIn = ()=>{
-        this.setState({page: 3})
-        this.paper1Text.classList.remove('yellowTopBorder')
-        this.paper1Text.style.setProperty('fontFamily', 'mainDisplayFont2')
+        canvas.classList.add('zcanvas')
+        this.paper1Text.style.setProperty('font-family', 'mainDisplayFont2')
         this.paper1Text.style.setProperty('visibility', 'visible')
         this.container.style.setProperty('background', 'white')
         this.paper1Text.classList.add('centeredDisplay')
         this.paper1Text.style.setProperty('transform', 'scale(1)')
-        this.setState({message: '2019'})
-        setTimeout(()=>{this.writeText(2, 50)} , 500)
     }
-    /*
-        USE MAIN ENGINE TO POWER UP ALL FUNCTIONS 
-    */
+    finalDisplay = ()=>{
+        this.paper1Text.classList.add('zfinalDisplay')
+    }
+    __MAIN_RENDER_ENGINE__ = ()=>{
+        /* IN MOST FUNCTIONS USING 2 PARAMETERS, THE FIRST IS THE CONDITION AND THE SECOND IS THE SPEED OF THE ANIMATION
+        NO FUNCTION IS BASED ON ANY OTHER FUNCTION, ALL ARE INDEPENDENT AND ARE EXECUTED BASED ON THE MAIN RENDER ENGINE. 
+        SPEEDS ARE PASSED IN AS TOTAL AMOUNT OF MILLISECONDS REQUIRED FOR THE WHOLE PROCESS OF A FUNCTION */
+        /*******************
+        ROADMAP OF FUNCTIONS WITH INTERVAL USAGE
+        1. MOVE BACKGROUND [POSITION (0-300),THE ACTUAL SPEED OF THE BACKGROUND MOVEMENT] 
+        2. WRITE TEXT [ TOTAL TIME ] 
+        3. FLICKER [ TOTAL FLICKERS, TOTAL TIME ] 
+        4. REMOVE TEXT [ TOTAL TIME ]
+        5. STRAIGHTEN PAPERS [ 500 MS ]
+        6. MOVE BACKGROUND [ 300 ]
+        7. SLIDE TO RIGHT [ 500-550 MS ]
+        8. TRANSFORM PAGE SIZES [ 500 MS ]
+        9. GET 2ND DISPLAY SCREEN [ 500 MS ]
+        10. WRITE TEXT [ TOTAL TIME ] 
+        11. ADD YELLOW BORDERS [ 500 MS ]
+        12. REMOVE TEXT [ 100 MS ]
+        12. SCALE UP THE PAPERS AND ZOOM IN
+        13. FADE TEXT INTO DISPLAY [ 500 MS ]
+        *******************/
+        this.mainTimeController = 5000
+        this.mainTimeDivisor = 
+        this.moveBackground('fast', 250)
+        this.writeText(this.mainTimeController - 500)
+        setTimeout(()=>{this.flicker(6, 4000)}, this.mainTimeController)
+        setTimeout(()=>{this.removeText(1000)}, this.mainTimeController + 4000)
+        setTimeout(()=>{this.straightenPapers()}, this.mainTimeController + 5000)
+        setTimeout(()=>{this.moveBackground(300, 250)}, this.mainTimeController + 5500)
+        setTimeout(()=>{this.slideToRight()}, this.mainTimeController + 5500)
+        setTimeout(()=>{this.transformPapers()}, this.mainTimeController + 6050)
+        setTimeout(()=>{this.getDisplayBack()}, this.mainTimeController + 6550)
+        setTimeout(()=>{this.addYellowBorders();this.setState({message: 'A year just passed and we are only getting stronger!'}); this.writeText(500);}, this.mainTimeController + 7550)
+        setTimeout(()=>{this.removeText(100)}, this.mainTimeController + 11550)
+        setTimeout(()=>{this.scaleUp()}, this.mainTimeController + 12550)
+        setTimeout(()=>{this.setState({message: 'Stay with me in...'}); this.fadeIn();}, this.mainTimeController + 13550)
+        setTimeout(()=>{this.writeText(200)}, this.mainTimeController + 13850)
+        setTimeout(()=>{this.setState({messageWritten: '2019'}); this.finalDisplay();}, this.mainTimeController + 15850)
+        setTimeout(()=>{document.getElementById('madeWithLoveBy').classList.add('madeWithLoveByVis')}, this.mainTimeController + 17000)
+    }
+    
     render(){
         return(
             <>
