@@ -1,6 +1,6 @@
 # SW19
 ## Stay with me in 2019, a small animation using HTML,CSS &amp; JS.
-####### Hey peeps! You're free to share this without my permission, but it would be nice to leave my name included! 
+###### Hey peeps! You're free to share this without my permission, but it would be nice to leave my name included! 
  It didn't take me long, couldn't afford the time for it, going through finals! 
 
 ## NOTES
