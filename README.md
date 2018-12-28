@@ -5,4 +5,5 @@
 
 ## NOTES
  This is not 100% completed. My 100% is when it's completely responsive (it isn't even 5% responsive for the given reasons), it's a bit heavy, given the sound files and stuff, I tried to reduce all sizes of everything as I could. 
-### Happy holidays & merry christmas! 
+###### Preview the website on https://kl13nt.github.io/SW19/
+# Happy new year & merry christmas! 
