@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import './GLOBAL_CSS/globalstyle.styl'
-// import { BrowserRouter, Route, NavLink } from 'react-router-dom'
+//Module imports
 const MainDisplay1 = (props)=>{
     if(props.page ==1 || props.page ==2) return (
             <p id="paper1Text" className='paper1Text'>{props.messageWritten}</p>
@@ -10,6 +10,7 @@ const MainDisplay1 = (props)=>{
             <p id="paper1Text" className = 'paper1Text'>Stay with me in <span id="year">{props.messageWritten}</span></p>
     )
 }
+//Conditional rendering based on current position through the animation
 class MainDisplay extends Component{
     state={
         page: 1, 
@@ -19,6 +20,7 @@ class MainDisplay extends Component{
         appearance: false, 
         year: '____'
     }
+//Message is the original state value that gets changed while messageWritten is the one to be rendered 
     componentDidMount(){
         
         this.paper1 = document.getElementById('paper1')
@@ -27,29 +29,28 @@ class MainDisplay extends Component{
         this.container = document.getElementById('container')
         this.topMarginRoot = document.getElementById('topMarginRoot')
         this.paper1Side = document.getElementById('paper1').offsetLeft 
-
+        //Declaration of DOM variables 
         this.paper1Text.style.left = `${this.paper1Side}px` //set text to be on top of paper 
-        
         window.addEventListener('resize', ()=>{
             this.paper1Text.style.left = document.getElementById('paper1').offsetLeft 
         })
-        setTimeout(()=>{this.__MAIN_RENDER_ENGINE__()}, 4000)
+        setTimeout(()=>{this.__MAIN_RENDER_ENGINE__()}, 4000) //Start up the main render engine, making sure that it starts after all assets are loaded 
     }
-    moveBackground = (x, y)=>{
+    moveBackground = (x, y)=>{ //Background movement 
         if(window.bgInterval) clearInterval(window.bgInterval)
         if(x == 0){
             window.bgInterval = setInterval(()=>{ 
                 this.container.style.backgroundPositionX = `${x}%`
                 x++
                 if(x==200) x = 0
-            }, y)} //MOVING BACKGROUND ANIMATION SPEED
+            }, y)}
         else if(x == 300){
             clearInterval(window.bgInterval)
             this.container.style.backgroundPositionX = `${x}%`
             this.moveBackground(0, 250)
         }
     }
-    writeText = (y)=>{
+    writeText = (y)=>{ //Text write control
         let i = 0
         let writingInterval = setInterval(()=>{ //TEXT WRITING ANIMATION
             this.setState({
@@ -61,7 +62,7 @@ class MainDisplay extends Component{
             }
         }, (y/this.state.message.length)) //WRITING ANIMATION SPEED
     }
-    flicker = (x, y)=>{
+    flicker = (x, y)=>{ //Text flicker animation
         let scoreAppearance = true
         let flickeringInterval = setInterval(()=>{  //FLICKERING ANIMATION 
             if(x > 0){
